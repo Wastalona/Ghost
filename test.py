@@ -34,17 +34,11 @@ KV = '''
             id: avatar
             size_hint: None, None
             size: "56dp", "56dp"
-            source: "data/logo/kivy-icon-256.png"
+            source: "data/image/statistics.png"
 
     MDLabel:
-        text: "KivyMD library"
+        text: "Ghost Money"
         font_style: "Button"
-        size_hint_y: None
-        height: self.texture_size[1]
-
-    MDLabel:
-        text: "kivydevelopment@gmail.com"
-        font_style: "Caption"
         size_hint_y: None
         height: self.texture_size[1]
 
@@ -109,12 +103,11 @@ class testApp(MDApp):
 
     def on_start(self):
         icons_item = {
-            "folder": "My files",
-            "account-multiple": "Shared with me",
-            "star": "Starred",
+            "chart-arc": "Charts",
+            "theme-light-dark": "Theme",
+            "file-export": "Export",
             "history": "Recent",
-            "checkbox-marked": "Shared with me",
-            "upload": "Upload",
+            "information-outline": "About of app",
         }
         for icon_name in icons_item.keys():
             self.root.ids.content_drawer.ids.md_list.add_widget(
