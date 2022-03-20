@@ -1,10 +1,13 @@
-from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import StringProperty, ListProperty
-
 from kivymd.app import MDApp
+from kivymd.icon_definitions import md_icons
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ListProperty
 from kivymd.theming import ThemableBehavior
+from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.list import OneLineIconListItem, MDList
+from kivymd.uix.tab import MDTabsBase
+
 
 
 KV = '''
@@ -37,10 +40,11 @@ KV = '''
             source: "data/image/statistics.png"
 
     MDLabel:
-        text: "Ghost Money"
+        text: "Settings"
         font_style: "Button"
         size_hint_y: None
         height: self.texture_size[1]
+
 
     ScrollView:
 
@@ -56,17 +60,18 @@ Screen:
         ScreenManager:
 
             Screen:
-
+                md_bg_color:255,0,0,0
                 BoxLayout:
                     orientation: 'vertical'
+                    md_bg_color:255,0,0,0
 
                     MDToolbar:
-                        title: "Ghost_Money"
+                        title: "Ghost Money"
                         elevation: 10
                         left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
 
-                    Widget:
-
+                    MDTabs:
+                        id: tabs
 
         MDNavigationDrawer:
             id: nav_drawer
@@ -74,6 +79,10 @@ Screen:
             ContentNavigationDrawer:
                 id: content_drawer
 '''
+
+
+class Tab(MDFloatLayout, MDTabsBase):
+    pass
 
 
 class ContentNavigationDrawer(BoxLayout):
@@ -104,15 +113,19 @@ class testApp(MDApp):
     def on_start(self):
         icons_item = {
             "chart-arc": "Charts",
-            "theme-light-dark": "Theme",
+            "theme-light-dark": "Light/Dark",
             "file-export": "Export",
             "history": "Recent",
             "information-outline": "About of app",
         }
         for icon_name in icons_item.keys():
             self.root.ids.content_drawer.ids.md_list.add_widget(
-                ItemDrawer(icon=icon_name, text=icons_item[icon_name])
-            )
+                ItemDrawer(icon=icon_name, text=icons_item[icon_name]))
+        #add tabs
+        self.root.ids.tabs.add_widget(Tab(icon="food", title="Necessary"))
+        self.root.ids.tabs.add_widget(Tab(icon="food", title="Unnecessary"))
+        self.root.ids.tabs.add_widget(Tab(icon="food", title="Storage"))
+
 
 
 testApp().run()
