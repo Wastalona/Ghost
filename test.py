@@ -47,37 +47,107 @@ KV = '''
 
 
     ScrollView:
-
         DrawerList:
             id: md_list
 
 
-
 Screen:
-
     MDNavigationLayout:
-
         ScreenManager:
-
             Screen:
-                md_bg_color:255,0,0,0
                 BoxLayout:
                     orientation: 'vertical'
-                    md_bg_color:255,0,0,0
 
                     MDToolbar:
                         title: "Ghost Money"
                         elevation: 10
                         left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+                        md_bg_color:.17,.18,.18,1
 
                     MDTabs:
                         id: tabs
+                        on_tab_switch: app.on_tab_switch(*args)
+                        height:"48dp"
+                        tab_indicator_anim: False
+                        background_color:.1,.1,.1,1
 
-        MDNavigationDrawer:
-            id: nav_drawer
+                        Tab:
+                            id: 1
+                            title: "History"
+                            icon: "view-list"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
 
-            ContentNavigationDrawer:
-                id: content_drawer
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "History"
+                                        halign: "center"
+
+                        Tab:
+                            id: 2
+                            title: "Expences"
+                            icon: "star"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "Necessary"
+                                        halign: "center"
+
+
+                        Tab:
+                            id: 3
+                            title: "Income"
+                            icon: "penguin"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "Unnecessary"
+                                        halign: "center"
+
+
+                        Tab:
+                            id: 4
+                            title: "Storage"
+                            icon: "safe-square"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "Storage"
+                                        halign: "center"
+
+
+    MDNavigationDrawer:
+        id: nav_drawer
+        md_bg_color:.99,.98,.98,1
+
+        ContentNavigationDrawer:
+            id: content_drawer
+
+
+    MDScreen:
+        MDFloatingActionButtonSpeedDial:
+            data: app.data
+            root_button_anim: True
+        MDFloatingActionButtonSpeedDial:
+            hint_animation: True
 '''
 
 
@@ -107,25 +177,39 @@ class DrawerList(ThemableBehavior, MDList):
 
 
 class testApp(MDApp):
+    data = {
+        'income cash': 'cash-plus',
+        'expences cash': 'cash-minus',
+        'income card': 'credit-card-plus',
+        'expences card': 'credit-card-minus',
+    }
+
     def build(self):
         return Builder.load_string(KV)
 
     def on_start(self):
         icons_item = {
+            "account-cash": "All budget",
             "chart-arc": "Charts",
             "theme-light-dark": "Light/Dark",
             "file-export": "Export",
-            "history": "Recent",
+            "github": "Source code",
             "information-outline": "About of app",
         }
         for icon_name in icons_item.keys():
             self.root.ids.content_drawer.ids.md_list.add_widget(
                 ItemDrawer(icon=icon_name, text=icons_item[icon_name]))
-        #add tabs
-        self.root.ids.tabs.add_widget(Tab(icon="food", title="Necessary"))
-        self.root.ids.tabs.add_widget(Tab(icon="food", title="Unnecessary"))
-        self.root.ids.tabs.add_widget(Tab(icon="food", title="Storage"))
+        # #add tabs
+        # self.root.ids.tabs.add_widget(Tab(icon="view-list", title="History"))
+        # self.root.ids.tabs.add_widget(Tab(icon="star", title="Necessary"))
+        # self.root.ids.tabs.add_widget(Tab(icon="penguin", title="Unnecessary"))
+        # self.root.ids.tabs.add_widget(Tab(icon="safe-square", title="Storage"))
 
+
+    def on_tab_switch(
+        self, instance_tabs, instance_tab, instance_tab_label, tab_text
+    ):
+        print(tab_text)
 
 
 testApp().run()
