@@ -1,0 +1,150 @@
+# Menu item in the DrawerList list.
+<ItemDrawer>:
+    theme_text_color: "Custom"
+    on_release: .98, .96, .90, 1
+
+    IconLeftWidget:
+        id: icon
+        icon: root.icon
+        theme_text_color: "Custom"
+        text_color: .98, .96, .90, 1
+
+
+<ContentNavigationDrawer>:
+    orientation: "vertical"
+    padding: "8dp"
+    spacing: "8dp"
+
+    AnchorLayout:
+        anchor_x: "center"
+        size_hint_y: None
+        height: avatar.height
+
+        Image:
+            id: avatar
+            size_hint: None, None
+            size: "56dp", "56dp"
+            source: "data/image/ghost.png"
+
+    MDLabel:
+        text: "Settings"
+        font_style: "Button"
+        halign: "center"
+        color: .98, .96, .90, 1
+        size_hint_y: None
+        height: self.texture_size[1]
+
+
+    ScrollView:
+        DrawerList:
+            id: md_list
+
+
+Screen:
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDToolbar:
+                        title: app.title
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+                        md_bg_color:.17,.18,.18,1
+
+                    MDTabs:
+                        id: tabs
+                        on_tab_switch: app.on_tab_switch(*args)
+                        height:"48dp"
+                        tab_indicator_anim: False
+                        background_color:.1,.1,.1,1
+
+                        Tab:
+                            id: 1
+                            title: "History"
+                            icon: "view-list"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                # MDTextField:
+                                #     hint_text: "Rectangle mode"
+                                #     mode: "rectangle"
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "History"
+                                        halign: "center"
+                        Tab:
+                            id: 2
+                            title: "Expences"
+                            icon: "star"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "Necessary"
+                                        halign: "center"
+                        Tab:
+                            id: 3
+                            title: "Income"
+                            icon: "penguin"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: "5dp"
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+
+                                    MDLabel:
+                                        text: "Unnecessary"
+                                        halign: "center"
+                        Tab:
+                            id: 4
+                            title: "Storage"
+                            icon: "safe-square"
+                            BoxLayout:
+                                orientation: 'vertical'
+                                adaptive_size: True
+                                padding: "10dp"
+
+                                MDLabel:
+                                    text: "₽ " + app.cash + " BYN"#"₽ 607,34 BYN"
+                                    font_style: "H4"
+                                    halign: "center"
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    adaptive_size: True
+                                    padding: "10dp"
+                                    MDLabel:
+                                        text: "$ 184,15 USD"
+                                        icon: "currency-usd"
+                                        font_style: "H5"
+                                        halign: "center"
+                                    MDLabel:
+                                        text: "€ 167,09 EUR"
+                                        font_style: "H5"
+                                        halign: "center"
+
+
+
+    MDNavigationDrawer:
+        id: nav_drawer
+        md_bg_color:.17,.18,.18,1
+
+        ContentNavigationDrawer:
+            id: content_drawer
+
+
+    MDScreen:
+        MDFloatingActionButtonSpeedDial:
+            data: app.data
+            root_button_anim: True
+        MDFloatingActionButtonSpeedDial:
+            hint_animation: True
