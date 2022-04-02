@@ -39,6 +39,19 @@
         DrawerList:
             id: md_list
 
+            
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+
+    MDTextField:
+        hint_text: "City"
+
+    MDTextField:
+        hint_text: "Street"
+
 
 Screen:
     MDNavigationLayout:
@@ -68,43 +81,75 @@ Screen:
                                 orientation: 'vertical'
                                 padding: "5dp"
 
-                                # MDTextField:
-                                #     hint_text: "Rectangle mode"
-                                #     mode: "rectangle"
                                 BoxLayout:
-                                    orientation: 'horizontal'
+                                    id: box
+                                    orientation: 'vertical'
 
                                     MDLabel:
-                                        text: "History"
+                                        text: "Soon ..."
+                                        # text: "No history yet"
                                         halign: "center"
+                                        font_style: "H6"
                         Tab:
                             id: 2
                             title: "Expences"
                             icon: "star"
                             BoxLayout:
                                 orientation: 'vertical'
-                                padding: "5dp"
+                                adaptive_size: True
+                                padding: "10dp"
 
+                                MDLabel:
+                                    text: f"₽ {app.cash50} BYN"
+                                    font_style: "H4"
+                                    halign: "center"
+                                    theme_text_color: "Custom"
+                                    text_color: .22, .83, .25, 1
                                 BoxLayout:
                                     orientation: 'horizontal'
-
+                                    adaptive_size: True
+                                    padding: "10dp"
                                     MDLabel:
-                                        text: "Necessary"
+                                        text: f"$ {app.currency_converter('USD', app.cash50)} USD"
+                                        icon: "currency-usd"
+                                        font_style: "H5"
                                         halign: "center"
+                                        theme_text_color: "Secondary"
+                                    MDLabel:
+                                        text: f"€ {app.currency_converter('EUR', app.cash50)} EUR"
+                                        font_style: "H5"
+                                        halign: "center"
+                                        theme_text_color: "Secondary"
                         Tab:
                             id: 3
                             title: "Income"
                             icon: "penguin"
                             BoxLayout:
                                 orientation: 'vertical'
-                                padding: "5dp"
+                                adaptive_size: True
+                                padding: "10dp"
 
+                                MDLabel:
+                                    text: f"₽ {app.cash20} BYN"
+                                    font_style: "H4"
+                                    halign: "center"
+                                    theme_text_color: "Custom"
+                                    text_color: .42, .22, .83, 1
                                 BoxLayout:
                                     orientation: 'horizontal'
-
+                                    adaptive_size: True
+                                    padding: "10dp"
                                     MDLabel:
-                                        text: "Unnecessary"
+                                        text: f"$ {app.currency_converter('USD', app.cash20)} USD"
+                                        icon: "currency-usd"
+                                        font_style: "H5"
                                         halign: "center"
+                                        theme_text_color: "Secondary"
+                                    MDLabel:
+                                        text: f"€ {app.currency_converter('EUR', app.cash20)} EUR"
+                                        font_style: "H5"
+                                        halign: "center"
+                                        theme_text_color: "Secondary"
                         Tab:
                             id: 4
                             title: "Storage"
@@ -115,28 +160,33 @@ Screen:
                                 padding: "10dp"
 
                                 MDLabel:
-                                    text: "₽ " + app.cash + " BYN"#"₽ 607,34 BYN"
+                                    text: f"₽ {app.cash30} BYN"
                                     font_style: "H4"
                                     halign: "center"
+                                    theme_text_color: "Custom"
+                                    text_color: .83, .6, .22, 1
                                 BoxLayout:
                                     orientation: 'horizontal'
                                     adaptive_size: True
                                     padding: "10dp"
                                     MDLabel:
-                                        text: "$ 184,15 USD"
+                                        text: f"$ {app.currency_converter('USD', app.cash30)} USD"
                                         icon: "currency-usd"
                                         font_style: "H5"
                                         halign: "center"
+                                        theme_text_color: "Secondary"
                                     MDLabel:
-                                        text: "€ 167,09 EUR"
+                                        text: f"€ {app.currency_converter('EUR', app.cash30)} EUR"
                                         font_style: "H5"
                                         halign: "center"
+                                        theme_text_color: "Secondary"
 
 
 
     MDNavigationDrawer:
         id: nav_drawer
         md_bg_color:.17,.18,.18,1
+        padding: 20, 20, 20, 16
 
         ContentNavigationDrawer:
             id: content_drawer
@@ -144,7 +194,9 @@ Screen:
 
     MDScreen:
         MDFloatingActionButtonSpeedDial:
+            callback: app.call
             data: app.data
             root_button_anim: True
-        MDFloatingActionButtonSpeedDial:
-            hint_animation: True
+            md_bg_color: .38, .27, .60, 1
+            text_color: .38, .27, .60, 1
+            icon_color:.38, .27, .60, 1

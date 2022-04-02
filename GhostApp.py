@@ -7,7 +7,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.list import OneLineIconListItem, MDList
 from kivymd.uix.tab import MDTabsBase
-
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton
 
 class Tab(MDFloatLayout, MDTabsBase):
     pass
@@ -34,10 +36,17 @@ class DrawerList(ThemableBehavior, MDList):
         #         break
         # instance_item.text_color = self.theme_cls.primary_color
 
+class Content(BoxLayout):
+    pass
+
 
 class GhostApp(MDApp):
     title = "Ghost Money"
-    cash = "607,34"
+    cash = 607.34
+    cash50 = round(cash * 0.5, 2)
+    cash30 = round(cash * 0.3, 2)
+    cash20 = round(cash * 0.2, 2)
+    dialog = None
 
     data = {
         'income cash': 'cash-plus',
@@ -45,6 +54,72 @@ class GhostApp(MDApp):
         'income card': 'credit-card-plus',
         'expences card': 'credit-card-minus',
     }
+
+    #func for button "ADD"
+    def call(self, btn):
+        def dialog_window():
+            if not self.dialog:
+                self.dialog = MDDialog(
+                    title='Change in wallet',
+                    type="custom",
+                    content_cls=Content(),
+                    buttons=[
+                        MDFlatButton(
+                            text="CANCEL",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                        ),
+                        MDFlatButton(
+                            text="OK",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                        ),
+                    ],
+                )
+            self.dialog.open()
+
+
+        if btn.icon == 'cash-plus':
+            print('1')
+            dialog_window()
+        elif btn.icon == 'cash-minus':
+            print('3')
+            dialog_window()
+        elif btn.icon == 'credit-card-plus':
+            print('2')
+            dialog_window()
+        elif btn.icon == 'credit-card-minus':
+            print('4')
+            dialog_window()
+
+    #func for button "MENU"
+    def all_budget():
+        pass
+
+
+    def charts():
+        pass
+
+
+    def theme():
+        pass
+
+
+    def cod():
+        pass
+
+
+    def about_of_us():
+        pass
+
+
+    def currency_converter(self, currency, money):
+        if currency == 'USD':
+            money = round(money * 0.31, 2)
+            return money
+        else:
+            money = round(money * 0.29, 2)
+            return money
 
 
     def on_start(self):
