@@ -39,18 +39,44 @@
         DrawerList:
             id: md_list
 
-            
+
 <Content>
+    id: content_conteiner
     orientation: "vertical"
     spacing: "12dp"
     size_hint_y: None
-    height: "120dp"
+    height: "200dp"
 
     MDTextField:
-        hint_text: "City"
+        id: name_money
+        hint_text: "Name of change"
+        mode: "fill"
 
     MDTextField:
-        hint_text: "Street"
+        id: data_money
+        hint_text: "Change amount"
+        mode: "fill"
+
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 330
+        MDRectangleFlatButton:
+            id: cancel_btn
+            text: "CANCEL"
+            font_size: 12
+            theme_text_color: "Custom"
+            text_color: self.theme_cls.primary_color
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: app.cancel()
+
+        MDRectangleFlatButton:
+            id: accept_btn
+            text: "ACCEPT"
+            font_size: 12
+            theme_text_color: "Custom"
+            text_color: self.theme_cls.primary_color
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: app.accept(data_money.text, name_money.text)
 
 
 Screen:
@@ -92,7 +118,7 @@ Screen:
                                         font_style: "H6"
                         Tab:
                             id: 2
-                            title: "Expences"
+                            title: "Nsr. Expences"
                             icon: "star"
                             BoxLayout:
                                 orientation: 'vertical'
@@ -122,7 +148,7 @@ Screen:
                                         theme_text_color: "Secondary"
                         Tab:
                             id: 3
-                            title: "Income"
+                            title: "Unsr. Expences"
                             icon: "penguin"
                             BoxLayout:
                                 orientation: 'vertical'

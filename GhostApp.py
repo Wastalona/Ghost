@@ -11,6 +11,7 @@ from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 
+
 class Tab(MDFloatLayout, MDTabsBase):
     pass
 
@@ -28,7 +29,6 @@ class DrawerList(ThemableBehavior, MDList):
     def set_color_item(self, instance_item):
         """Called when tap on a menu item."""
         pass
-
         # Set the color of the icon and text for the menu item.
         # for item in self.children:
         #     if item.text_color == self.theme_cls.primary_color:
@@ -36,13 +36,16 @@ class DrawerList(ThemableBehavior, MDList):
         #         break
         # instance_item.text_color = self.theme_cls.primary_color
 
+
 class Content(BoxLayout):
     pass
 
 
 class GhostApp(MDApp):
+    global cash
     title = "Ghost Money"
-    cash = 607.34
+    cash = 597.66
+    dolg = 103
     cash50 = round(cash * 0.5, 2)
     cash30 = round(cash * 0.3, 2)
     cash20 = round(cash * 0.2, 2)
@@ -55,41 +58,47 @@ class GhostApp(MDApp):
         'expences card': 'credit-card-minus',
     }
 
+
     #func for button "ADD"
+    def cancel(self):
+        self.dialog.dismiss()
+
+
+    def accept(self, bank, name_of_bank):
+        global cash
+        self.dialog.dismiss()
+        print(name_of_bank, '~', bank)
+        if bar == (1 or 3):
+            cash = cash + float(bank)
+        else:
+            cash = cash - float(bank)
+        print(cash)
+
+
     def call(self, btn):
+        global bar
         def dialog_window():
-            if not self.dialog:
-                self.dialog = MDDialog(
-                    title='Change in wallet',
-                    type="custom",
-                    content_cls=Content(),
-                    buttons=[
-                        MDFlatButton(
-                            text="CANCEL",
-                            theme_text_color="Custom",
-                            text_color=self.theme_cls.primary_color,
-                        ),
-                        MDFlatButton(
-                            text="OK",
-                            theme_text_color="Custom",
-                            text_color=self.theme_cls.primary_color,
-                        ),
-                    ],
-                )
+            # if not self.dialog:
+            self.dialog = MDDialog(
+                title='Change in wallet',
+                type="custom",
+                content_cls=Content(),
+                auto_dismiss=False,
+            )
             self.dialog.open()
 
 
         if btn.icon == 'cash-plus':
-            print('1')
+            bar = 1
             dialog_window()
         elif btn.icon == 'cash-minus':
-            print('3')
+            bar = 3
             dialog_window()
         elif btn.icon == 'credit-card-plus':
-            print('2')
+            bar = 2
             dialog_window()
         elif btn.icon == 'credit-card-minus':
-            print('4')
+            bar = 4
             dialog_window()
 
     #func for button "MENU"
