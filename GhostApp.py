@@ -1,3 +1,7 @@
+import sqlite3
+
+import datetime
+
 from kivymd.app import MDApp
 from kivymd.icon_definitions import md_icons
 from kivy.lang import Builder
@@ -42,21 +46,12 @@ class Content(BoxLayout):
 
 
 class GhostApp(MDApp):
-    global cash
-    title = "Ghost Money"
-    cash = 597.66
-    dolg = 103
-    cash50 = round(cash * 0.5, 2)
-    cash30 = round(cash * 0.3, 2)
-    cash20 = round(cash * 0.2, 2)
-    dialog = None
-
-    data = {
-        'income cash': 'cash-plus',
-        'expences cash': 'cash-minus',
-        'income card': 'credit-card-plus',
-        'expences card': 'credit-card-minus',
-    }
+    def get_data_from_db(what_get):
+        i = 0
+        for elems in cur.execute("""SELECT * FROM Wastalona"""):
+            i += 1
+        for elem in cur.execute(f"""SELECT {what_get} FROM Wastalona WHERE id = {i}"""):
+            return elem[0]
 
 
     #func for button "ADD"
@@ -66,12 +61,25 @@ class GhostApp(MDApp):
 
     def accept(self, bank, name_of_bank):
         global cash
+        global id
+
+        now = datetime.datetime.now()
+        date = now.strftime("%d-%m-%Y %H:%M")
+
+
         self.dialog.dismiss()
         print(name_of_bank, '~', bank)
-        if bar == (1 or 3):
-            cash = cash + float(bank)
+
+        if bank.isdigit() is not True:
+            bank = 0
+        elif bar == 1:
+            cash = round(cash + float(bank))
         else:
-            cash = cash - float(bank)
+            cash = round(cash - float(bank))
+
+        # data_for_db = (4, cash, date)
+        # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
+        # db.commit()
         print(cash)
 
 
@@ -88,17 +96,11 @@ class GhostApp(MDApp):
             self.dialog.open()
 
 
-        if btn.icon == 'cash-plus':
+        if btn.icon == 'cash-plus' or btn.icon == 'credit-card-plus':
             bar = 1
             dialog_window()
-        elif btn.icon == 'cash-minus':
-            bar = 3
-            dialog_window()
-        elif btn.icon == 'credit-card-plus':
+        else:
             bar = 2
-            dialog_window()
-        elif btn.icon == 'credit-card-minus':
-            bar = 4
             dialog_window()
 
     #func for button "MENU"
@@ -154,5 +156,46 @@ class GhostApp(MDApp):
     def build(self):
         return Builder.load_file("data/interface.kv")
 
+
+    global cash
+    global cur
+    global db
+    # now = datetime.datetime.now()
+    # date = now.strftime("%d-%m-%Y %H:%M")
+
+
+    db = sqlite3.connect(r'data/ghostdb.db')
+    cur = db.cursor()
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS Wastalona(
+        id INT PRIMARY KEY,
+        wallet_balance FLOAT,
+        date_of_issue TEXT
+    )""")
+
+    # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
+
+    db.commit()
+
+
+    id = get_data_from_db("id")
+    cash = get_data_from_db("wallet_balance")
+    date = get_data_from_db("date_of_issue")
+
+
+    cash50 = round(cash * 0.5, 2)
+    cash30 = round(cash * 0.3, 2)
+    cash20 = round(cash * 0.2, 2)
+    # data_for_db = (1,cash, date)
+
+    title = "Ghost Money"
+    dialog = None
+
+    data = {
+        'income cash': 'cash-plus',
+        'expences cash': 'cash-minus',
+        'income card': 'credit-card-plus',
+        'expences card': 'credit-card-minus',
+    }
 
 GhostApp().run()
