@@ -53,6 +53,50 @@ class GhostApp(MDApp):
         for elem in cur.execute(f"""SELECT {what_get} FROM Wastalona WHERE id = {i}"""):
             return elem[0]
 
+    #################################variable##################################
+    global cash
+    global cur
+    global db
+    global id
+    # now = datetime.datetime.now()
+    # date = now.strftime("%d-%m-%Y %H:%M")
+
+
+    db = sqlite3.connect(r'data/ghostdb.db')
+    cur = db.cursor()
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS Wastalona(
+        id INT PRIMARY KEY,
+        wallet_balance FLOAT,
+        date_of_issue TEXT
+    )""")
+
+    # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
+
+    db.commit()
+
+
+    id = get_data_from_db("id")
+    cash = get_data_from_db("wallet_balance")
+    date = get_data_from_db("date_of_issue")
+
+
+    cash50 = round(cash * 0.5, 2)
+    cash30 = round(cash * 0.3, 2)
+    cash20 = round(cash * 0.2, 2)
+    # data_for_db = (1,cash, date)
+
+    title = "Ghost Money"
+    dialog = None
+
+    data = {
+        'income cash': 'cash-plus',
+        'expences cash': 'cash-minus',
+        'income card': 'credit-card-plus',
+        'expences card': 'credit-card-minus',
+    }
+    ###########################################################################
+
 
     #func for button "ADD"
     def cancel(self):
@@ -62,6 +106,26 @@ class GhostApp(MDApp):
     def accept(self, bank, name_of_bank):
         global cash
         global id
+
+
+        def Update_Label(update_data_lab):
+            new_nes_cash = round(update_data_lab * 0.5, 2)
+            new_unes_cash = round(update_data_lab * 0.3, 2)
+            new_srg_cash = round(update_data_lab * 0.2, 2)
+
+
+            self.root.ids.nes_lab_byn.text = f"₽ {new_nes_cash} BYN"
+            self.root.ids.nes_lab_usd.text = f"$ {round(new_nes_cash * 0.31, 2)} USD"
+            self.root.ids.nes_lab_eur.text = f"€ {round(new_nes_cash * 0.29, 2)} EUR"
+
+            self.root.ids.unes_lab_byn.text = f"₽ {new_unes_cash} BYN"
+            self.root.ids.unes_lab_usd.text = f"$ {round(new_unes_cash * 0.31, 2)} USD"
+            self.root.ids.unes_lab_eur.text = f"€ {round(new_unes_cash * 0.29, 2)} EUR"
+
+            self.root.ids.srg_lab_byn.text = f"₽ {new_srg_cash} BYN"
+            self.root.ids.srg_lab_usd.text = f"$ {round(new_srg_cash * 0.31, 2)} USD"
+            self.root.ids.srg_lab_eur.text = f"€ {round(new_srg_cash * 0.29, 2)} EUR"
+
 
         now = datetime.datetime.now()
         date = now.strftime("%d-%m-%Y %H:%M")
@@ -77,7 +141,9 @@ class GhostApp(MDApp):
         else:
             cash = round(cash - float(bank))
 
-        # data_for_db = (4, cash, date)
+        Update_Label(cash)
+
+        # data_for_db = (id + 1, cash, date)
         # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
         # db.commit()
         print(cash)
@@ -152,50 +218,9 @@ class GhostApp(MDApp):
     ):
         print(tab_text)
 
-
+    #func for start interface
     def build(self):
         return Builder.load_file("data/interface.kv")
 
-
-    global cash
-    global cur
-    global db
-    # now = datetime.datetime.now()
-    # date = now.strftime("%d-%m-%Y %H:%M")
-
-
-    db = sqlite3.connect(r'data/ghostdb.db')
-    cur = db.cursor()
-
-    cur.execute("""CREATE TABLE IF NOT EXISTS Wastalona(
-        id INT PRIMARY KEY,
-        wallet_balance FLOAT,
-        date_of_issue TEXT
-    )""")
-
-    # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
-
-    db.commit()
-
-
-    id = get_data_from_db("id")
-    cash = get_data_from_db("wallet_balance")
-    date = get_data_from_db("date_of_issue")
-
-
-    cash50 = round(cash * 0.5, 2)
-    cash30 = round(cash * 0.3, 2)
-    cash20 = round(cash * 0.2, 2)
-    # data_for_db = (1,cash, date)
-
-    title = "Ghost Money"
-    dialog = None
-
-    data = {
-        'income cash': 'cash-plus',
-        'expences cash': 'cash-minus',
-        'income card': 'credit-card-plus',
-        'expences card': 'credit-card-minus',
-    }
 
 GhostApp().run()
