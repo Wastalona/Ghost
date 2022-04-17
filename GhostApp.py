@@ -1,6 +1,8 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~import library~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import sqlite3
 
 import datetime
+import webbrowser
 
 from kivymd.app import MDApp
 from kivymd.icon_definitions import md_icons
@@ -14,6 +16,8 @@ from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
+from kivymd.uix.picker import MDDatePicker
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 class Tab(MDFloatLayout, MDTabsBase):
@@ -46,12 +50,15 @@ class Content(BoxLayout):
 
 
 class GhostApp(MDApp):
+#========================func to get data from data base=======================
     def get_data_from_db(what_get):
         i = 0
         for elems in cur.execute("""SELECT * FROM Wastalona"""):
             i += 1
         for elem in cur.execute(f"""SELECT {what_get} FROM Wastalona WHERE id = {i}"""):
             return elem[0]
+#===============================================================================
+
 
     #################################variable##################################
     global cash
@@ -59,7 +66,7 @@ class GhostApp(MDApp):
     global db
     global id
     # now = datetime.datetime.now()
-    # date = now.strftime("%d-%m-%Y %H:%M")
+    # hy = now.strftime("%d-%m-%Y %H:%M")
 
 
     db = sqlite3.connect(r'data/ghostdb.db')
@@ -70,10 +77,11 @@ class GhostApp(MDApp):
         wallet_balance FLOAT,
         date_of_issue TEXT
     )""")
+    # data_for_db = (1, 600, hy)
 
     # cur.execute("""INSERT INTO Wastalona VALUES(?,?,?);""", data_for_db)
-
-    db.commit()
+    #
+    # db.commit()
 
 
     id = get_data_from_db("id")
@@ -95,10 +103,12 @@ class GhostApp(MDApp):
         'income card': 'credit-card-plus',
         'expences card': 'credit-card-minus',
     }
-    ###########################################################################
+
+    # Theme_Checking()
+    ##########################################################################
 
 
-    #func for button "ADD"
+#============================func for button "ADD"==============================
     def cancel(self):
         self.dialog.dismiss()
 
@@ -149,6 +159,21 @@ class GhostApp(MDApp):
         print(cash)
 
 
+    def on_save(self, instance, value, date_range):
+        print(value)
+
+
+    def on_cancel(self, instance, value):
+        print('close')
+
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        primary_color= .56, .23, 1, 1
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+
+
     def call(self, btn):
         global bar
         def dialog_window():
@@ -168,35 +193,78 @@ class GhostApp(MDApp):
         else:
             bar = 2
             dialog_window()
-
-    #func for button "MENU"
-    def all_budget():
-        pass
+#===============================================================================
 
 
-    def charts():
-        pass
+#============================func for button "MENU"=============================
+    def Check_list(self, choose_func):
+        global theme_count
+        def all_budget():
+            print("all_budget")
+            # return Builder.load_file("data/interface_budget.kv")
 
 
-    def theme():
-        pass
+        def charts():
+            print("charts")
 
 
-    def cod():
-        pass
+        def theme():
+            def apply_theme(name_theme, cfg_count):
+                self.theme_cls.theme_style = name_theme
+                with open("cfg.txt", "w") as d:
+                    d.seek(33)
+                    d.write(cfg_count)
+
+            with open("cfg.txt", "r") as f:
+                f.seek(33)
+                text = int(f.read(1))
+                apply_theme("Dark", "1") if text == 0 else apply_theme("Light", "0")
 
 
-    def about_of_us():
-        pass
+        def send():
+            print("send")
+
+
+        def cod():
+            webbrowser.open('https://github.com/Wastalona/Ghost', new=2)
+
+
+        def about_of_us():
+            print("about_of_us")
+
+
+        name_of_tab = [
+            'account-cash',
+            'chart-arc',
+            'theme-light-dark',
+            'file-export',
+            'github',
+            'information-outline']
+
+        # all_budget()
+        # charts()
+        # theme()
+        # send()
+        # about_of_us()
+        if choose_func == 'github':
+            cod()
+        elif choose_func == 'account-cash':
+            all_budget()
+        elif choose_func == 'chart-arc':
+            charts()
+        elif choose_func == 'file-export':
+            send()
+        elif choose_func == 'theme-light-dark':
+            theme()
+        elif choose_func == 'information-outline':
+            about_of_us()
 
 
     def currency_converter(self, currency, money):
         if currency == 'USD':
-            money = round(money * 0.31, 2)
-            return money
+            return round(money * 0.31, 2)
         else:
-            money = round(money * 0.29, 2)
-            return money
+            return round(money * 0.29, 2)
 
 
     def on_start(self):
@@ -213,14 +281,24 @@ class GhostApp(MDApp):
                 ItemDrawer(icon=icon_name, text=icons_item[icon_name]))
 
 
-    def on_tab_switch(
+    """
+        ! Tab change check !
+        def on_tab_switch(
         self, instance_tabs, instance_tab, instance_tab_label, tab_text
     ):
         print(tab_text)
+    """
+#===============================================================================
 
-    #func for start interface
+
+#============================func for start interface===========================
     def build(self):
+        with open("cfg.txt", "r") as f:
+            f.seek(33)
+            text = int(f.read(1))
+            if text == 0: self.theme_cls.theme_style = "Light"  #else print("Dark")
+            if text == 1: self.theme_cls.theme_style = "Dark"
         return Builder.load_file("data/interface.kv")
-
+#===============================================================================
 
 GhostApp().run()
