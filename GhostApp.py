@@ -36,7 +36,6 @@ class ItemDrawer(OneLineIconListItem):
 class DrawerList(ThemableBehavior, MDList):
     def set_color_item(self, instance_item):
         """Called when tap on a menu item."""
-        pass
         # Set the color of the icon and text for the menu item.
         # for item in self.children:
         #     if item.text_color == self.theme_cls.primary_color:
@@ -228,24 +227,23 @@ class GhostApp(MDApp):
         def cod():
             webbrowser.open('https://github.com/Wastalona/Ghost', new=2)
 
-
         def about_of_us():
-            print("about_of_us")
+            self.dialog = MDDialog(
+                size_hint_x = 0.38,
+                radius = [25, 9, 25, 9],
+                title = "          About application",
+                text = "| App name ~ Ghost Money |\n| Application version ~ 1.0.0|\n| Last update ~ 19.04.2022 |",
+                buttons = [
+                    MDFlatButton(
+                        text="OK",
+                        theme_text_color = "Custom",
+                        text_color = self.theme_cls.primary_color,
+                        # on_release=self.dialog.dismiss()
+                    )
+                ]
+            )
 
 
-        name_of_tab = [
-            'account-cash',
-            'chart-arc',
-            'theme-light-dark',
-            'file-export',
-            'github',
-            'information-outline']
-
-        # all_budget()
-        # charts()
-        # theme()
-        # send()
-        # about_of_us()
         if choose_func == 'github':
             cod()
         elif choose_func == 'account-cash':
@@ -258,6 +256,7 @@ class GhostApp(MDApp):
             theme()
         elif choose_func == 'information-outline':
             about_of_us()
+            self.dialog.open()
 
 
     def currency_converter(self, currency, money):
